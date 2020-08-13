@@ -6,6 +6,5 @@ namespace SimpleForm_RegisterUserByPhoto.Data {
             DbContextOptions<PersonContext> options) : base (options) { }
 
         public DbSet<Models.Person> Person { get; set; }
-        public DbSet<Models.Gender> Gender { get; set; }
     }
 }

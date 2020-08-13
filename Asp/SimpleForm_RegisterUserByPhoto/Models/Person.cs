@@ -14,9 +14,6 @@ namespace SimpleForm_RegisterUserByPhoto.Models {
 
         [Range (5, 120)]
         public int Age { get; set; }
-
-        [Required]
-        public Gender Gender { get; set; }
         public string Description { get; set; }
         public bool Agreement { get; set; }
         public DateTime RegisterDateTime { get; set; }
