@@ -15,7 +15,11 @@ namespace SimpleForm_RegisterUserWithPhoto.Models {
         [Range (5, 120)]
         public int Age { get; set; }
         public string Description { get; set; }
+
+        [Utility.Attribute.Agreement]
         public bool Agreement { get; set; }
+
+        [Display (Name = "Register Date")]
         public DateTime RegisterDateTime { get; set; }
     }
 }
