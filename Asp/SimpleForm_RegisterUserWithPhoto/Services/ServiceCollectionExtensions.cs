@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SimpleForm_RegisterUserByPhoto.Data;
+using SimpleForm_RegisterUserWithPhoto.Data;
 
-namespace SimpleForm_RegisterUserByPhoto.Services {
+namespace SimpleForm_RegisterUserWithPhoto.Services {
     public static class ServiceCollectionExtensions {
         public static IServiceCollection AddDatabase (
                 this IServiceCollection services, IConfiguration configuration, bool isDevelopment) =>

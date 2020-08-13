@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace SimpleForm_RegisterUserByPhoto.Models {
+namespace SimpleForm_RegisterUserWithPhoto.Models {
     public class Person {
         public int Id { get; set; }
 
