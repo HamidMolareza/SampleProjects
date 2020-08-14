@@ -4,6 +4,12 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+    <PropertyGroup>
+      <Nullable>enable</Nullable>
+      <WarningsAsErrors>CS8625</WarningsAsErrors>
+      <WarningsAsErrors>CS8603</WarningsAsErrors>
+    </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="FunctionalUtility" Version="1.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.7">
@@ -13,6 +19,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.7" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+    <PackageReference Include="ModelsValidation" Version="1.2.1" />
   </ItemGroup>
 
 </Project>

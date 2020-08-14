@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using ModelsValidation.Attributes;
 
 namespace SimpleForm_RegisterUserWithPhoto.Models {
     public class Person {
@@ -7,16 +8,16 @@ namespace SimpleForm_RegisterUserWithPhoto.Models {
 
         [StringLength (35)]
         [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [StringLength (35)]
-        public string Family { get; set; }
+        public string? Family { get; set; }
 
         [Range (5, 120)]
         public int Age { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
-        [Utility.Attribute.Agreement]
+        [Agreement]
         public bool Agreement { get; set; }
 
         [Display (Name = "Register Date")]

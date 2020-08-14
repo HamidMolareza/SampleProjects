@@ -35,6 +35,7 @@
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="Agreement" /> @Html.DisplayNameFor(model => model.Agreement)
+                    <span asp-validation-for="Agreement" class="text-danger"></span>
                 </label>
             </div>
             <div class="form-group">
