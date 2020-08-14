@@ -43,7 +43,7 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create ([Bind ("Id,Name,Family,Age,Description,Agreement,RegisterDateTime")] Person person) {
+        public async Task<IActionResult> Create ([Bind ("Id,Name,Family,Phone,Age,Description,Agreement,RegisterDateTime")] Person person) {
             if (ModelState.IsValid) {
                 _context.Add (person);
                 await _context.SaveChangesAsync ();
@@ -70,7 +70,7 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit (int id, [Bind ("Id,Name,Family,Age,Description,Agreement,RegisterDateTime")] Person person) {
+        public async Task<IActionResult> Edit (int id, [Bind ("Id,Name,Family,Phone,Age,Description,Agreement,RegisterDateTime")] Person person) {
             if (id != person.Id) {
                 return NotFound ();
             }

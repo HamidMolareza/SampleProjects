@@ -6,12 +6,16 @@ namespace SimpleForm_RegisterUserWithPhoto.Models {
     public class Person {
         public int Id { get; set; }
 
-        [StringLength (35)]
         [Required]
+        [StringLength (35)]
         public string Name { get; set; } = null!;
 
         [StringLength (35)]
         public string? Family { get; set; }
+
+        [Required]
+        [PhoneNumber]
+        public string Phone { get; set; } = null!;
 
         [Range (5, 120)]
         public int Age { get; set; }

@@ -18,25 +18,28 @@ namespace SimpleForm_RegisterUserWithPhoto.Models {
                     new Person {
                         Name = "Ali",
                             Family = "Majidi",
+                            Phone = "+989100000000",
                             Age = 21,
                             Agreement = true,
-                            RegisterDateTime = new DateTime (2020, 08, 14, 3, 20, 12)
+                            RegisterDateTime = DateTime.Now.AddDays (-1)
                     },
 
                     new Person {
                         Name = "Mohammad",
                             Family = "Zamani",
+                            Phone = "+989100000000",
                             Age = 23,
                             Agreement = true,
                             Description = "This is a description.",
-                            RegisterDateTime = new DateTime (2020, 07, 12, 1, 20, 12)
+                            RegisterDateTime = DateTime.Now.AddDays (-2)
                     },
                     new Person {
                         Name = "Javad",
                             Family = "Javadi",
+                            Phone = "+989100000000",
                             Age = 21,
                             Agreement = true,
-                            RegisterDateTime = new DateTime (2020, 01, 12, 3, 10, 1)
+                            RegisterDateTime = DateTime.Now.AddDays (-3)
                     }
                 );
                 context.SaveChanges ();
