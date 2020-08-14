@@ -1,7 +1,10 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
+using FunctionalUtility.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ModelsValidation.Utility;
 using SimpleForm_RegisterUserWithPhoto.Data;
 using SimpleForm_RegisterUserWithPhoto.Models;
 
@@ -43,8 +46,12 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create ([Bind ("Id,Name,Family,Phone,Age,Description,Agreement,RegisterDateTime")] Person person) {
+        public async Task<IActionResult> Create ([Bind ("Id,Name,Family,Phone,Age,Description,Agreement")] Person person) {
             if (ModelState.IsValid) {
+                var standardPhone = PhoneUtility.GetPhone (person.Phone).ThrowExceptionOnFail ();
+                person.Phone = standardPhone.Value;
+
+                person.RegisterDateTime = DateTime.UtcNow;
                 _context.Add (person);
                 await _context.SaveChangesAsync ();
                 return RedirectToAction (nameof (Index));
@@ -70,13 +77,22 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit (int id, [Bind ("Id,Name,Family,Phone,Age,Description,Agreement,RegisterDateTime")] Person person) {
+        public async Task<IActionResult> Edit (int id, [Bind ("Id,Name,Family,Phone,Age,Description,Agreement")] Person person) {
             if (id != person.Id) {
                 return NotFound ();
             }
 
             if (ModelState.IsValid) {
                 try {
+                    var registerDataTime = (await _context.Person
+                        .Where (p => p.Id == id).AsNoTracking ().FirstOrDefaultAsync ())?.RegisterDateTime;
+                    if (registerDataTime is null)
+                        return NotFound ();
+                    person.RegisterDateTime = (DateTime) registerDataTime;
+
+                    var standardPhone = PhoneUtility.GetPhone (person.Phone).ThrowExceptionOnFail ();
+                    person.Phone = standardPhone.Value;
+
                     _context.Update (person);
                     await _context.SaveChangesAsync ();
                 } catch (DbUpdateConcurrencyException) {
