@@ -1,15 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SimpleForm_RegisterUserWithPhoto.Data;
+using SimpleForm_RegisterUserWithPhoto.Interfaces;
 using SimpleForm_RegisterUserWithPhoto.Services;
 
 namespace SimpleForm_RegisterUserWithPhoto {
@@ -26,6 +20,7 @@ namespace SimpleForm_RegisterUserWithPhoto {
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices (IServiceCollection services) {
             services.AddDatabase (Configuration, _env.IsDevelopment ())
+                .AddSingleton<IPersons, PersonsService> ()
                 .AddControllersWithViews ();
         }
 

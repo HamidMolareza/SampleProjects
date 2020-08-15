@@ -3,54 +3,49 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SimpleForm_RegisterUserWithPhoto.Data;
 
-namespace SimpleForm_RegisterUserWithPhoto.Migrations
-{
-    [DbContext(typeof(PersonContext))]
-    partial class PersonContextModelSnapshot : ModelSnapshot
-    {
-        protected override void BuildModel(ModelBuilder modelBuilder)
-        {
+namespace SimpleForm_RegisterUserWithPhoto.Migrations {
+    [DbContext (typeof (PersonContext))]
+    partial class PersonContextModelSnapshot : ModelSnapshot {
+        protected override void BuildModel (ModelBuilder modelBuilder) {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.7")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation ("ProductVersion", "3.1.7")
+                .HasAnnotation ("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation ("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("SimpleForm_RegisterUserWithPhoto.Models.Person", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+            modelBuilder.Entity ("SimpleForm_RegisterUserWithPhoto.Models.Person", b => {
+                b.Property<int> ("Id")
+                    .ValueGeneratedOnAdd ()
+                    .HasColumnType ("int")
+                    .HasAnnotation ("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Age")
-                        .HasColumnType("int");
+                b.Property<int> ("Age")
+                    .HasColumnType ("int");
 
-                    b.Property<bool>("Agreement")
-                        .HasColumnType("bit");
+                b.Property<bool> ("Agreement")
+                    .HasColumnType ("bit");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string> ("Description")
+                    .HasColumnType ("nvarchar(max)");
 
-                    b.Property<string>("Family")
-                        .HasColumnType("nvarchar(35)")
-                        .HasMaxLength(35);
+                b.Property<string> ("Family")
+                    .HasColumnType ("nvarchar(35)")
+                    .HasMaxLength (35);
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(35)")
-                        .HasMaxLength(35);
+                b.Property<string> ("Name")
+                    .IsRequired ()
+                    .HasColumnType ("nvarchar(35)")
+                    .HasMaxLength (35);
 
-                    b.Property<DateTime>("RegisterDateTime")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime> ("RegisterDateTime")
+                    .HasColumnType ("datetime2");
 
-                    b.HasKey("Id");
+                b.HasKey ("Id");
 
-                    b.ToTable("Person");
-                });
+                b.ToTable ("Person");
+            });
 #pragma warning restore 612, 618
         }
     }

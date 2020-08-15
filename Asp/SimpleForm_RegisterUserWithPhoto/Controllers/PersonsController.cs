@@ -1,123 +1,87 @@
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 using FunctionalUtility.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ModelsValidation.Utility;
-using SimpleForm_RegisterUserWithPhoto.Data;
+using SimpleForm_RegisterUserWithPhoto.Interfaces;
 using SimpleForm_RegisterUserWithPhoto.Models;
 
 namespace SimpleForm_RegisterUserWithPhoto.Controllers {
     public class PersonsController : Controller {
-        private readonly PersonContext _context;
+        private readonly IPersons _personsService;
 
-        public PersonsController (PersonContext context) {
-            _context = context;
+        public PersonsController (IPersons personsService) {
+            _personsService = personsService;
         }
 
         // GET: Persons
-        public async Task<IActionResult> Index () {
-            return View (await _context.Person.ToListAsync ());
-        }
+        public async Task<IActionResult> Index () =>
+            View (await _personsService.GetAllAsync ());
 
         // GET: Persons/Details/5
         public async Task<IActionResult> Details (int? id) {
-            if (id == null) {
+            if (id == null)
                 return NotFound ();
-            }
 
-            var person = await _context.Person
-                .FirstOrDefaultAsync (m => m.Id == id);
-            if (person == null) {
+            var person = await _personsService.GetAsync ((int) id);
+            if (person == null)
                 return NotFound ();
-            }
 
             return View (person);
         }
 
         // GET: Persons/Create
-        public IActionResult Create () {
-            return View ();
-        }
+        public IActionResult Create () => View ();
 
         // POST: Persons/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create ([Bind ("Id,Name,Family,Phone,Age,Description,Agreement")] Person person) {
-            if (ModelState.IsValid) {
-                var standardPhone = PhoneUtility.GetPhone (person.Phone).ThrowExceptionOnFail ();
-                person.Phone = standardPhone.Value;
+            if (!ModelState.IsValid)
+                return View (person);
 
-                person.RegisterDateTime = DateTime.UtcNow;
-                _context.Add (person);
-                await _context.SaveChangesAsync ();
-                return RedirectToAction (nameof (Index));
-            }
-            return View (person);
+            await _personsService.CreateAsync (person);
+            return RedirectToAction (nameof (Index));
         }
 
         // GET: Persons/Edit/5
         public async Task<IActionResult> Edit (int? id) {
-            if (id == null) {
+            if (id == null)
                 return NotFound ();
-            }
 
-            var person = await _context.Person.FindAsync (id);
-            if (person == null) {
+            var person = await _personsService.GetAsync ((int) id);
+            if (person == null)
                 return NotFound ();
-            }
+
             return View (person);
         }
 
         // POST: Persons/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit (int id, [Bind ("Id,Name,Family,Phone,Age,Description,Agreement")] Person person) {
-            if (id != person.Id) {
+            if (id != person.Id)
                 return NotFound ();
+
+            if (!ModelState.IsValid)
+                return View (person);
+
+            var result = await _personsService.UpdateAsync (id, person);
+            if (!result.IsSuccess) {
+                if (result.IsNotFoundError ())
+                    return NotFound ();
+                result.ThrowExceptionOnFail ();
             }
 
-            if (ModelState.IsValid) {
-                try {
-                    var registerDataTime = (await _context.Person
-                        .Where (p => p.Id == id).AsNoTracking ().FirstOrDefaultAsync ())?.RegisterDateTime;
-                    if (registerDataTime is null)
-                        return NotFound ();
-                    person.RegisterDateTime = (DateTime) registerDataTime;
-
-                    var standardPhone = PhoneUtility.GetPhone (person.Phone).ThrowExceptionOnFail ();
-                    person.Phone = standardPhone.Value;
-
-                    _context.Update (person);
-                    await _context.SaveChangesAsync ();
-                } catch (DbUpdateConcurrencyException) {
-                    if (!PersonExists (person.Id)) {
-                        return NotFound ();
-                    } else {
-                        throw;
-                    }
-                }
-                return RedirectToAction (nameof (Index));
-            }
-            return View (person);
+            return RedirectToAction (nameof (Index));
         }
 
         // GET: Persons/Delete/5
         public async Task<IActionResult> Delete (int? id) {
-            if (id == null) {
+            if (id == null)
                 return NotFound ();
-            }
 
-            var person = await _context.Person
-                .FirstOrDefaultAsync (m => m.Id == id);
-            if (person == null) {
+            var person = await _personsService.GetAsync ((int) id);
+            if (person == null)
                 return NotFound ();
-            }
 
             return View (person);
         }
@@ -126,14 +90,14 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
         [HttpPost, ActionName ("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed (int id) {
-            var person = await _context.Person.FindAsync (id);
-            _context.Person.Remove (person);
-            await _context.SaveChangesAsync ();
-            return RedirectToAction (nameof (Index));
-        }
+            var result = await _personsService.DeleteAsync (id);
+            if (!result.IsSuccess) {
+                if (result.IsNotFoundError ())
+                    return NotFound ();
+                result.ThrowExceptionOnFail ();
+            }
 
-        private bool PersonExists (int id) {
-            return _context.Person.Any (e => e.Id == id);
+            return RedirectToAction (nameof (Index));
         }
     }
 }
