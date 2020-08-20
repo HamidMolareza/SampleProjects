@@ -3,6 +3,7 @@ using FunctionalUtility.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using SimpleForm_RegisterUserWithPhoto.Interfaces;
 using SimpleForm_RegisterUserWithPhoto.Models;
+using SimpleForm_RegisterUserWithPhoto.ViewModels;
 
 namespace SimpleForm_RegisterUserWithPhoto.Controllers {
     public class PersonsController : Controller {
@@ -34,11 +35,12 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
         // POST: Persons/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create ([Bind ("Id,Name,Family,Phone,Age,Description,Agreement")] Person person) {
+        public async Task<IActionResult> Create (
+            [Bind ("Id,Name,Family,Phone,Age,Description,Agreement,ProfilePhoto")] PersonViewModel personViewModel) {
             if (!ModelState.IsValid)
-                return View (person);
+                return View (personViewModel);
 
-            await _personsService.CreateAsync (person);
+            await _personsService.CreateAsync (personViewModel);
             return RedirectToAction (nameof (Index));
         }
 

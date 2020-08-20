@@ -1,4 +1,4 @@
-@model SimpleForm_RegisterUserWithPhoto.Models.Person
+@model SimpleForm_RegisterUserWithPhoto.ViewModels.PersonViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -7,29 +7,29 @@
 <h1>Create</h1>
 
 <h4>Person</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+<hr/>
+<form asp-action="Create">
+    <div class="row">
+        <div class="col-md-4">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" class="form-control"/>
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Family" class="control-label"></label>
-                <input asp-for="Family" class="form-control" />
+                <input asp-for="Family" class="form-control"/>
                 <span asp-validation-for="Family" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Phone" class="control-label"></label>
-                <input asp-for="Phone" class="form-control" />
+                <input asp-for="Phone" class="form-control"/>
                 <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Age" class="control-label"></label>
-                <input asp-for="Age" class="form-control" />
+                <input asp-for="Age" class="form-control"/>
                 <span asp-validation-for="Age" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -39,21 +39,35 @@
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Agreement" /> @Html.DisplayNameFor(model => model.Agreement)
+                    <input class="form-check-input" asp-for="Agreement"/> @Html.DisplayNameFor(model => model.Agreement)
                     <span asp-validation-for="Agreement" class="text-danger"></span>
                 </label>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+        </div>
+        <div class="col-md-3">
+            <div class="form-group" id = "profile-div">
+                <div>
+                    <label asp-for="ProfilePhoto" class="control-label"></label>
+                </div>
+                <label for="imgInput">
+                    <input asp-for="ProfilePhoto" id="imgInput" accept=".png, .jpeg, .jpg, .bmp" style="display: none;"/>
+                    <img src="~/NoImage.jpg" alt="your image" id="profileImg"/>
+                </label>
+                <span asp-validation-for="ProfilePhoto" class="text-danger"></span>
             </div>
-        </form>
+        </div>
     </div>
-</div>
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary"/>
+    </div>
+</form>
 
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script src="~/js/PersonForm.js" asp-append-version="true"></script>
+    <script src="~/js/AttributeValidate.js" asp-append-version="true"></script>
 }
