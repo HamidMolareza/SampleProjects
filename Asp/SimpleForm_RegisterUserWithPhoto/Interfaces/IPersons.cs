@@ -9,7 +9,7 @@ namespace SimpleForm_RegisterUserWithPhoto.Interfaces {
         Task<List<Person>> GetAllAsync ();
         Task<Person?> GetAsync (int id);
         Task CreateAsync (PersonViewModel person);
-        Task<MethodResult> UpdateAsync (int id, Person person);
+        Task<MethodResult> UpdateAsync (int id, PersonViewModel personViewModel);
         Task<MethodResult> DeleteAsync (int id);
     }
 }

@@ -45,12 +45,12 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="form-group" id = "profile-div">
+            <div class="form-group" id="profile-div">
                 <div>
                     <label asp-for="ProfilePhoto" class="control-label"></label>
                 </div>
                 <label for="imgInput">
-                    <input asp-for="ProfilePhoto" id="imgInput" accept=".png, .jpeg, .jpg, .bmp" style="display: none;"/>
+                    <input asp-for="ProfilePhoto" id="imgInput" accept=".png, .jpeg, .jpg, .bmp" class="noDisplay"/>
                     <img src="~/NoImage.jpg" alt="your image" id="profileImg"/>
                 </label>
                 <span asp-validation-for="ProfilePhoto" class="text-danger"></span>

@@ -47,7 +47,7 @@ namespace SimpleForm_RegisterUserWithPhoto.Services {
             await file.CopyToAsync (stream);
         }
 
-        public async Task<MethodResult> UpdateAsync (int id, Person person) {
+        public async Task<MethodResult> UpdateAsync (int id, PersonViewModel personViewModel) {
             var registerDataTime = (await _context.Person
                 .Where (p => p.Id == id)
                 .AsNoTracking ()
@@ -56,11 +56,11 @@ namespace SimpleForm_RegisterUserWithPhoto.Services {
             if (registerDataTime is null)
                 return MethodResult.Fail (new NotFoundError ());
 
-            person.RegisterDateTime = (DateTime) registerDataTime;
-            var standardPhone = PhoneUtility.GetPhone (person.Phone).ThrowExceptionOnFail ();
-            person.Phone = standardPhone.Value;
+            personViewModel.RegisterDateTime = (DateTime) registerDataTime;
+            var standardPhone = PhoneUtility.GetPhone (personViewModel.Phone).ThrowExceptionOnFail ();
+            personViewModel.Phone = standardPhone.Value;
 
-            _context.Update (person);
+            _context.Person.Update (MapToMainModel (personViewModel));
             await _context.SaveChangesAsync ();
             return MethodResult.Ok ();
         }

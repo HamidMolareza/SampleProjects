@@ -53,20 +53,20 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
             if (person == null)
                 return NotFound ();
 
-            return View (person);
+            return View (MapToViewModel(person));
         }
 
         // POST: Persons/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit (int id, [Bind ("Id,Name,Family,Phone,Age,Description,Agreement")] Person person) {
-            if (id != person.Id)
+        public async Task<IActionResult> Edit (int id, [Bind ("Id,Name,Family,Phone,Age,Description,Agreement,ProfilePhoto")] PersonViewModel personViewModel) {
+            if (id != personViewModel.Id)
                 return NotFound ();
 
             if (!ModelState.IsValid)
-                return View (person);
+                return View (personViewModel);
 
-            var result = await _personsService.UpdateAsync (id, person);
+            var result = await _personsService.UpdateAsync (id, personViewModel);
             if (!result.IsSuccess) {
                 if (result.IsNotFoundError ())
                     return NotFound ();
@@ -101,5 +101,18 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
 
             return RedirectToAction (nameof (Index));
         }
+
+        private static PersonViewModel MapToViewModel(Person person) =>
+            new PersonViewModel
+            {
+                Age = person.Age,
+                Agreement = person.Agreement,
+                Description = person.Description,
+                Family = person.Family,
+                Id = person.Id,
+                Name = person.Name,
+                Phone = person.Phone,
+                RegisterDateTime = person.RegisterDateTime
+            };
     }
 }
