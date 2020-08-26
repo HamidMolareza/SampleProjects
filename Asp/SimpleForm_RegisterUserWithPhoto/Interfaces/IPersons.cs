@@ -7,9 +7,9 @@ using SimpleForm_RegisterUserWithPhoto.ViewModels;
 namespace SimpleForm_RegisterUserWithPhoto.Interfaces {
     public interface IPersons {
         Task<List<Person>> GetAllAsync ();
-        Task<Person?> GetAsync (int id);
+        Task<Person?> GetAsync (string id);
         Task CreateAsync (PersonViewModel person);
-        Task<MethodResult> UpdateAsync (int id, PersonViewModel personViewModel);
-        Task<MethodResult> DeleteAsync (int id);
+        Task<MethodResult> UpdateAsync (string id, PersonViewModel personViewModel);
+        Task<MethodResult> DeleteAsync (string id);
     }
 }

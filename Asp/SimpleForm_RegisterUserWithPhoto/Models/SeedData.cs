@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleForm_RegisterUserWithPhoto.Data;
+using SimpleForm_RegisterUserWithPhoto.Utility;
 
 namespace SimpleForm_RegisterUserWithPhoto.Models {
     public static class SeedData {
@@ -16,16 +17,17 @@ namespace SimpleForm_RegisterUserWithPhoto.Models {
 
                 context.Person.AddRange (
                     new Person {
-                        Name = "Ali",
+                        Id = MyGuid.Generate (),
+                            Name = "Ali",
                             Family = "Majidi",
                             Phone = "+989100000000",
                             Age = 21,
                             Agreement = true,
                             RegisterDateTime = DateTime.Now.AddDays (-1)
                     },
-
                     new Person {
-                        Name = "Mohammad",
+                        Id = MyGuid.Generate (),
+                            Name = "Mohammad",
                             Family = "Zamani",
                             Phone = "+989100000000",
                             Age = 23,
@@ -34,7 +36,8 @@ namespace SimpleForm_RegisterUserWithPhoto.Models {
                             RegisterDateTime = DateTime.Now.AddDays (-2)
                     },
                     new Person {
-                        Name = "Javad",
+                        Id = MyGuid.Generate (),
+                            Name = "Javad",
                             Family = "Javadi",
                             Phone = "+989100000000",
                             Age = 21,

@@ -4,7 +4,7 @@ using ModelsValidation.Attributes;
 
 namespace SimpleForm_RegisterUserWithPhoto.Models {
     public class Person {
-        public int Id { get; set; }
+        public string Id { get; set; } = null!;
 
         [Required]
         [StringLength (35)]
@@ -15,6 +15,7 @@ namespace SimpleForm_RegisterUserWithPhoto.Models {
 
         [Required]
         [PhoneNumber]
+        [Phone]
         public string Phone { get; set; } = null!;
 
         [Range (5, 120)]

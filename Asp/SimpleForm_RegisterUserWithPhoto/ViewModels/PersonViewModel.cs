@@ -2,10 +2,15 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 using ModelsValidation.Attributes;
+using SimpleForm_RegisterUserWithPhoto.Utility;
 
 namespace SimpleForm_RegisterUserWithPhoto.ViewModels {
     public class PersonViewModel {
-        public int Id { get; set; }
+        public PersonViewModel () {
+            Id = MyGuid.Generate ();
+        }
+
+        public string Id { get; set; }
 
         [Required]
         [StringLength (35)]

@@ -18,11 +18,11 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
             View (await _personsService.GetAllAsync ());
 
         // GET: Persons/Details/5
-        public async Task<IActionResult> Details (int? id) {
+        public async Task<IActionResult> Details (string? id) {
             if (id == null)
                 return NotFound ();
 
-            var person = await _personsService.GetAsync ((int) id);
+            var person = await _personsService.GetAsync ((string) id);
             if (person == null)
                 return NotFound ();
 
@@ -45,21 +45,21 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
         }
 
         // GET: Persons/Edit/5
-        public async Task<IActionResult> Edit (int? id) {
+        public async Task<IActionResult> Edit (string? id) {
             if (id == null)
                 return NotFound ();
 
-            var person = await _personsService.GetAsync ((int) id);
+            var person = await _personsService.GetAsync ((string) id);
             if (person == null)
                 return NotFound ();
 
-            return View (MapToViewModel(person));
+            return View (MapToViewModel (person));
         }
 
         // POST: Persons/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit (int id, [Bind ("Id,Name,Family,Phone,Age,Description,Agreement,ProfilePhoto")] PersonViewModel personViewModel) {
+        public async Task<IActionResult> Edit (string id, [Bind ("Id,Name,Family,Phone,Age,Description,Agreement,ProfilePhoto")] PersonViewModel personViewModel) {
             if (id != personViewModel.Id)
                 return NotFound ();
 
@@ -77,11 +77,11 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
         }
 
         // GET: Persons/Delete/5
-        public async Task<IActionResult> Delete (int? id) {
+        public async Task<IActionResult> Delete (string? id) {
             if (id == null)
                 return NotFound ();
 
-            var person = await _personsService.GetAsync ((int) id);
+            var person = await _personsService.GetAsync ((string) id);
             if (person == null)
                 return NotFound ();
 
@@ -91,7 +91,7 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
         // POST: Persons/Delete/5
         [HttpPost, ActionName ("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed (int id) {
+        public async Task<IActionResult> DeleteConfirmed (string id) {
             var result = await _personsService.DeleteAsync (id);
             if (!result.IsSuccess) {
                 if (result.IsNotFoundError ())
@@ -102,9 +102,8 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
             return RedirectToAction (nameof (Index));
         }
 
-        private static PersonViewModel MapToViewModel(Person person) =>
-            new PersonViewModel
-            {
+        private static PersonViewModel MapToViewModel (Person person) =>
+            new PersonViewModel {
                 Age = person.Age,
                 Agreement = person.Agreement,
                 Description = person.Description,

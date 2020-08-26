@@ -26,7 +26,7 @@ namespace SimpleForm_RegisterUserWithPhoto.Services {
         public Task<List<Person>> GetAllAsync () =>
             _context.Person.ToListAsync ();
 
-        public Task<Person?> GetAsync (int id) =>
+        public Task<Person?> GetAsync (string id) =>
             _context.Person.FirstOrDefaultAsync (m => m.Id == id) !;
 
         public async Task CreateAsync (PersonViewModel personViewModel) {
@@ -42,12 +42,13 @@ namespace SimpleForm_RegisterUserWithPhoto.Services {
             await _context.SaveChangesAsync ();
         }
 
-        private async Task ProcessFile (IFormFile file, int id) {
-            await using var stream = File.Create (Path.Combine (_filePath, id.ToString ()));
+        private async Task ProcessFile (IFormFile file, string id) {
+            Directory.CreateDirectory (_filePath);
+            await using var stream = File.Create (Path.Combine (_filePath, id));
             await file.CopyToAsync (stream);
         }
 
-        public async Task<MethodResult> UpdateAsync (int id, PersonViewModel personViewModel) {
+        public async Task<MethodResult> UpdateAsync (string id, PersonViewModel personViewModel) {
             var registerDataTime = (await _context.Person
                 .Where (p => p.Id == id)
                 .AsNoTracking ()
@@ -65,7 +66,7 @@ namespace SimpleForm_RegisterUserWithPhoto.Services {
             return MethodResult.Ok ();
         }
 
-        public async Task<MethodResult> DeleteAsync (int id) {
+        public async Task<MethodResult> DeleteAsync (string id) {
             var person = await _context.Person.FindAsync (id);
             if (person is null)
                 return MethodResult.Fail (new NotFoundError ());
