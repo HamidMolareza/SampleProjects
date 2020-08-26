@@ -10,6 +10,7 @@
 .vscode
 .idea
 wwwroot
+SecureRoot
 
 # User-specific files
 *.suo
