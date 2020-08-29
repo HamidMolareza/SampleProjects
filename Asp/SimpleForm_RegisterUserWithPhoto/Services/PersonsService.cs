@@ -21,15 +21,16 @@ using SimpleForm_RegisterUserWithPhoto.ViewModels;
 namespace SimpleForm_RegisterUserWithPhoto.Services {
     public class PersonsService : IPersons {
         private readonly PersonContext _context;
-        private readonly string _filePath = Path.Combine (Directory.GetCurrentDirectory (), "SecureRoot", "Persons"); //TODO: ***
+        private readonly string _filesPath;
         private readonly IFileSignature _fileSignatureService;
         private readonly ProfileImageSetting _profileImageSetting;
 
-        public PersonsService (PersonContext context,
-            IFileSignature fileSignatureService, ProfileImageSetting profileImageSetting) {
+        public PersonsService (PersonContext context, IFileSignature fileSignatureService,
+            ProfileImageSetting profileImageSetting, SecureRootSetting secureRootSetting) {
             _context = context;
             _fileSignatureService = fileSignatureService;
             _profileImageSetting = profileImageSetting;
+            _filesPath = secureRootSetting.Path;
         }
 
         public Task<List<Person>> GetAllAsync () =>
@@ -65,23 +66,25 @@ namespace SimpleForm_RegisterUserWithPhoto.Services {
                     return MethodResult.Fail (standardPhoneResult.Detail);
 
                 personViewModel.Phone = standardPhoneResult.Value;
-
                 personViewModel.RegisterDateTime = DateTime.UtcNow;
-                await _context.Person.AddAsync (MapToMainModel (personViewModel));
+                var mainPersonModel = MapToMainModel (personViewModel);
 
                 if (personViewModel.ProfilePhotoFile != null) {
                     var processResult = await ProcessFile (personViewModel.ProfilePhotoFile, personViewModel.Id);
                     if (!processResult.IsSuccess)
                         return processResult;
+
+                    mainPersonModel.HasProfile = true;
                 }
 
+                await _context.Person.AddAsync (mainPersonModel);
                 await _context.SaveChangesAsync ();
                 return MethodResult.Ok ();
             }, 1);
 
         private Task<MethodResult> ProcessFile (IFormFile file, string id) =>
             TryExtensions.TryAsync (async () => {
-                Directory.CreateDirectory (_filePath);
+                Directory.CreateDirectory (_filesPath);
                 await using var stream = File.Create (GetProfilePath (id));
                 await file.CopyToAsync (stream);
                 return MethodResult.Ok ();
@@ -118,15 +121,18 @@ namespace SimpleForm_RegisterUserWithPhoto.Services {
             personViewModel.RegisterDateTime = (DateTime) registerDataTime;
             var standardPhone = PhoneUtility.GetPhone (personViewModel.Phone).ThrowExceptionOnFail ();
             personViewModel.Phone = standardPhone.Value;
-
-            _context.Person.Update (MapToMainModel (personViewModel));
+            var mainPersonModel = MapToMainModel (personViewModel);
 
             if (personViewModel.ProfilePhotoFile != null) {
                 var processResult = await ProcessFile (personViewModel.ProfilePhotoFile, personViewModel.Id);
                 if (!processResult.IsSuccess)
                     return processResult;
+                mainPersonModel.HasProfile = true;
+            } else {
+                mainPersonModel.HasProfile = false;
             }
 
+            _context.Person.Update (mainPersonModel);
             await _context.SaveChangesAsync ();
             return MethodResult.Ok ();
         }
@@ -142,7 +148,7 @@ namespace SimpleForm_RegisterUserWithPhoto.Services {
         }
 
         public string GetProfilePath (string id) =>
-            Path.Combine (_filePath, id);
+            Path.Combine (_filesPath, id);
 
         private static Person MapToMainModel (PersonViewModel personViewModel) =>
             new Person {

@@ -27,5 +27,7 @@ namespace SimpleForm_RegisterUserWithPhoto.Models {
 
         [Display (Name = "Register Date")]
         public DateTime RegisterDateTime { get; set; }
+
+        public bool HasProfile { get; set; }
     }
 }

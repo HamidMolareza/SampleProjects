@@ -1,3 +1,4 @@
+using System.IO;
 using FileSignatureUtility;
 using FileSignatureUtility.Services;
 using FunctionalUtility.Extensions;
@@ -23,9 +24,14 @@ namespace SimpleForm_RegisterUserWithPhoto {
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices (IServiceCollection services) {
+            var secureRootSetting = new SecureRootSetting {
+                Path = Path.Combine (Directory.GetCurrentDirectory (), "SecureRoot")
+            };
+
             services.AddDatabase (Configuration, _env.IsDevelopment ())
                 .AddScoped<IPersons, PersonsService> ()
                 .AddSingleton<IFileSignature> (new InMemoryService ("Data.json"))
+                .AddSingleton (secureRootSetting)
                 .AddControllersWithViews ();
 
             Configuration.AddConfig<ProfileImageSetting> (services)

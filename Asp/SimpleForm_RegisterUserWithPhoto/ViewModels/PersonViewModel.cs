@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 using Microsoft.AspNetCore.Http;
 using ModelsValidation.Attributes;
 using SimpleForm_RegisterUserWithPhoto.Utility;
