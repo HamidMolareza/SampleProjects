@@ -3,14 +3,18 @@ using FunctionalUtility.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using SimpleForm_RegisterUserWithPhoto.Interfaces;
 using SimpleForm_RegisterUserWithPhoto.Models;
+using SimpleForm_RegisterUserWithPhoto.Models.Configs;
+using SimpleForm_RegisterUserWithPhoto.Utility;
 using SimpleForm_RegisterUserWithPhoto.ViewModels;
 
 namespace SimpleForm_RegisterUserWithPhoto.Controllers {
     public class PersonsController : Controller {
         private readonly IPersons _personsService;
+        private readonly ProfileImageSetting _profileImageSetting;
 
-        public PersonsController (IPersons personsService) {
+        public PersonsController (IPersons personsService, ProfileImageSetting profileImageSetting) {
             _personsService = personsService;
+            _profileImageSetting = profileImageSetting;
         }
 
         // GET: Persons
@@ -22,7 +26,7 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
             if (id == null)
                 return NotFound ();
 
-            var person = await _personsService.GetAsync ((string) id);
+            var person = await _personsService.GetAsync (id);
             if (person == null)
                 return NotFound ();
 
@@ -30,18 +34,24 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
         }
 
         // GET: Persons/Create
-        public IActionResult Create () => View ();
+        public IActionResult Create () =>
+            View (new PersonViewModel { ImageValidTypes = _profileImageSetting.ValidTypesStr });
 
         // POST: Persons/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create (
-            [Bind ("Id,Name,Family,Phone,Age,Description,Agreement,ProfilePhoto")] PersonViewModel personViewModel) {
+            [Bind ("Id,Name,Family,Phone,Age,Description,Agreement,ProfilePhotoFile")] PersonViewModel personViewModel) {
+            personViewModel.ImageValidTypes = _profileImageSetting.ValidTypesStr;
             if (!ModelState.IsValid)
                 return View (personViewModel);
 
-            await _personsService.CreateAsync (personViewModel);
-            return RedirectToAction (nameof (Index));
+            var createResult = await _personsService.CreateAsync (personViewModel);
+            if (createResult.IsSuccess)
+                return RedirectToAction (nameof (Index));
+
+            ModelState.AddMethodResultError (createResult.Detail);
+            return View (personViewModel);
         }
 
         // GET: Persons/Edit/5
@@ -49,31 +59,39 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
             if (id == null)
                 return NotFound ();
 
-            var person = await _personsService.GetAsync ((string) id);
+            var person = await _personsService.GetAsync (id);
             if (person == null)
                 return NotFound ();
 
-            return View (MapToViewModel (person));
+            var personViewModel = MapToViewModel (person);
+
+            //TODO: ****
+            //personViewModel.ProfileUrl = Url.Content(_personsService.GetProfilePath(personViewModel.Id));
+            personViewModel.ProfileUrl = "https://localhost:44333/img.jpg";
+
+            personViewModel.ImageValidTypes = _profileImageSetting.ValidTypesStr;
+            return View (personViewModel);
         }
 
         // POST: Persons/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit (string id, [Bind ("Id,Name,Family,Phone,Age,Description,Agreement,ProfilePhoto")] PersonViewModel personViewModel) {
+        public async Task<IActionResult> Edit (string id, [Bind ("Id,Name,Family,Phone,Age,Description,Agreement,ProfilePhotoFile")] PersonViewModel personViewModel) {
             if (id != personViewModel.Id)
                 return NotFound ();
 
+            personViewModel.ImageValidTypes = _profileImageSetting.ValidTypesStr;
             if (!ModelState.IsValid)
                 return View (personViewModel);
 
-            var result = await _personsService.UpdateAsync (id, personViewModel);
-            if (!result.IsSuccess) {
-                if (result.IsNotFoundError ())
-                    return NotFound ();
-                result.ThrowExceptionOnFail ();
-            }
+            var updateResult = await _personsService.UpdateAsync (id, personViewModel);
+            if (updateResult.IsSuccess) return RedirectToAction (nameof (Index));
 
-            return RedirectToAction (nameof (Index));
+            if (updateResult.IsNotFoundError ())
+                return NotFound ();
+
+            ModelState.AddMethodResultError (updateResult.Detail);
+            return View (personViewModel);
         }
 
         // GET: Persons/Delete/5
@@ -81,7 +99,7 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
             if (id == null)
                 return NotFound ();
 
-            var person = await _personsService.GetAsync ((string) id);
+            var person = await _personsService.GetAsync (id);
             if (person == null)
                 return NotFound ();
 

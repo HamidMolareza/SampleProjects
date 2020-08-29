@@ -1,5 +1,10 @@
 ﻿@model SimpleForm_RegisterUserWithPhoto.ViewModels.PersonViewModel
 
+@{
+    var imageSrc = Model?.ProfileUrl ?? Url.Content("~/NoImage.jpg");
+    var imageValidTypes = Model?.ImageValidTypes ?? ".png,.jpg,.jpeg,.gif,.bmp";
+}
+
 <div class="row">
     <div class="col-md-4">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -38,17 +43,18 @@
     <div class="col-md-3">
         <div class="form-group" id="profile-div">
             <div>
-                <label asp-for="ProfilePhoto" class="control-label"></label>
+                <label asp-for="ProfilePhotoFile" class="control-label"></label>
             </div>
             <label for="imgInput" class="cursor">
-                <input asp-for="ProfilePhoto" id="imgInput" accept=".png, .jpeg, .jpg, .bmp" class="noDisplay"/>
-                <img src="~/NoImage.jpg" alt="your image" id="profileImg"/>
+                <input asp-for="ProfilePhotoFile" id="imgInput" accept="@imageValidTypes" class="noDisplay"/>
+                <img src="@imageSrc" alt="your image" id="profileImg"/>
                 <div class="gray-dark text-white position-absolute" id="div-edit-profile-image">
                     <span class="material-icons align-text-bottom" id="pencil">edit</span>
                     Edit
                 </div>
             </label>
-            <span asp-validation-for="ProfilePhoto" class="text-danger"></span>
+            
         </div>
+        <span asp-validation-for="ProfilePhotoFile" id="validation-span-image" class="text-danger"></span>
     </div>
 </div>

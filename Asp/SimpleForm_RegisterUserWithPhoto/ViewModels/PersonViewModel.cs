@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 using Microsoft.AspNetCore.Http;
 using ModelsValidation.Attributes;
 using SimpleForm_RegisterUserWithPhoto.Utility;
@@ -21,6 +22,7 @@ namespace SimpleForm_RegisterUserWithPhoto.ViewModels {
 
         [Required]
         [PhoneNumber]
+        [Phone]
         public string Phone { get; set; } = null!;
 
         [Range (5, 120)]
@@ -34,6 +36,10 @@ namespace SimpleForm_RegisterUserWithPhoto.ViewModels {
         public DateTime RegisterDateTime { get; set; }
 
         [Display (Name = "Profile Photo")]
-        public IFormFile? ProfilePhoto { get; set; }
+        public IFormFile? ProfilePhotoFile { get; set; }
+
+        public string? ProfileUrl { get; set; }
+
+        public string? ImageValidTypes { get; set; }
     }
 }
