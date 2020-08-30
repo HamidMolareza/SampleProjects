@@ -1,4 +1,4 @@
-@model IEnumerable<SimpleForm_RegisterUserWithPhoto.Models.Person>
+@model IEnumerable<SimpleForm_RegisterUserWithPhoto.ViewModels.PersonViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -44,7 +44,7 @@
     {
         <tr>
             <td>
-
+                <img src="@item.ProfileUrl" alt="User Image" class="small-profile-image"/>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
