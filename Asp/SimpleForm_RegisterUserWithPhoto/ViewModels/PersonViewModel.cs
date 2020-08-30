@@ -38,7 +38,5 @@ namespace SimpleForm_RegisterUserWithPhoto.ViewModels {
         public IFormFile? ProfilePhotoFile { get; set; }
 
         public string? ProfileUrl { get; set; }
-
-        public string? ImageValidTypes { get; set; }
     }
 }

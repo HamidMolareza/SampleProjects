@@ -39,15 +39,17 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
         }
 
         // GET: Persons/Create
-        public IActionResult Create () =>
-            View (new PersonViewModel { ImageValidTypes = _profileImageSetting.ValidTypesStr });
+        public IActionResult Create () {
+            ViewData["ImageValidTypes"] = _profileImageSetting.ValidTypesStr;
+            return View ();
+        }
 
         // POST: Persons/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create (
             [Bind ("Id,Name,Family,Phone,Age,Description,Agreement,ProfilePhotoFile")] PersonViewModel personViewModel) {
-            personViewModel.ImageValidTypes = _profileImageSetting.ValidTypesStr;
+            ViewData["ImageValidTypes"] = _profileImageSetting.ValidTypesStr;
             if (!ModelState.IsValid)
                 return View (personViewModel);
 
@@ -70,7 +72,7 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
 
             var personViewModel = MapToViewModel (person);
 
-            personViewModel.ImageValidTypes = _profileImageSetting.ValidTypesStr;
+            ViewData["ImageValidTypes"] = _profileImageSetting.ValidTypesStr;
             return View (personViewModel);
         }
 
@@ -81,7 +83,7 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
             if (id != personViewModel.Id)
                 return NotFound ();
 
-            personViewModel.ImageValidTypes = _profileImageSetting.ValidTypesStr;
+            ViewData["ImageValidTypes"] = _profileImageSetting.ValidTypesStr;
             if (!ModelState.IsValid)
                 return View (personViewModel);
 
