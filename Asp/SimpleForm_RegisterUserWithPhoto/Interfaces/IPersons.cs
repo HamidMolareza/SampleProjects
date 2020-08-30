@@ -11,6 +11,6 @@ namespace SimpleForm_RegisterUserWithPhoto.Interfaces {
         Task<MethodResult> CreateAsync (PersonViewModel person);
         Task<MethodResult> UpdateAsync (string id, PersonViewModel personViewModel);
         Task<MethodResult> DeleteAsync (string id);
-        string GetProfilePath (string id);
+        string GetProfilePath (string fileName);
     }
 }

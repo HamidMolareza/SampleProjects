@@ -72,9 +72,9 @@ namespace SimpleForm_RegisterUserWithPhoto.Services {
                 if (personViewModel.ProfilePhotoFile != null) {
                     var processResult = await ProcessFile (personViewModel.ProfilePhotoFile, personViewModel.Id);
                     if (!processResult.IsSuccess)
-                        return processResult;
+                        return MethodResult.Fail (processResult.Detail);
 
-                    mainPersonModel.HasProfile = true;
+                    mainPersonModel.ProfileImageName = processResult.Value;
                 }
 
                 await _context.Person.AddAsync (mainPersonModel);
@@ -82,13 +82,25 @@ namespace SimpleForm_RegisterUserWithPhoto.Services {
                 return MethodResult.Ok ();
             }, 1);
 
-        private Task<MethodResult> ProcessFile (IFormFile file, string id) =>
+        private Task<MethodResult<string>> ProcessFile (IFormFile file, string id) =>
             TryExtensions.TryAsync (async () => {
+                var fileTypeResult = await DetectFileType (
+                    file.OpenReadStream (), _profileImageSetting.ValidTypes);
+                if (!fileTypeResult.IsSuccess)
+                    return MethodResult<string>.Fail (fileTypeResult.Detail);
+
                 Directory.CreateDirectory (_filesPath);
-                await using var stream = File.Create (GetProfilePath (id));
+                var fileName = id + "." + fileTypeResult.Value;
+                await using var stream = File.Create (GetProfilePath (fileName));
                 await file.CopyToAsync (stream);
-                return MethodResult.Ok ();
+                return MethodResult<string>.Ok (fileName);
             });
+
+        private Task<MethodResult<string>> DetectFileType (Stream fileStream, string[] validFiles) =>
+            new Detection (_fileSignatureService)
+            .DetectFileTypeAsync (fileStream, validFiles)
+            .OnSuccessFailWhenAsync (result => result is null,
+                new NotFoundError (message: "The file type is not in valid range types.")) !;
 
         private Task<MethodResult<bool>> IsFileValidAsync (Stream fileStream, string[] validFiles) =>
             new Validation (_fileSignatureService)
@@ -126,10 +138,10 @@ namespace SimpleForm_RegisterUserWithPhoto.Services {
             if (personViewModel.ProfilePhotoFile != null) {
                 var processResult = await ProcessFile (personViewModel.ProfilePhotoFile, personViewModel.Id);
                 if (!processResult.IsSuccess)
-                    return processResult;
-                mainPersonModel.HasProfile = true;
+                    return MethodResult.Fail (processResult.Detail);
+                mainPersonModel.ProfileImageName = processResult.Value;
             } else {
-                mainPersonModel.HasProfile = false;
+                mainPersonModel.ProfileImageName = null;
             }
 
             _context.Person.Update (mainPersonModel);
@@ -147,8 +159,8 @@ namespace SimpleForm_RegisterUserWithPhoto.Services {
             return MethodResult.Ok ();
         }
 
-        public string GetProfilePath (string id) =>
-            Path.Combine (_filesPath, id);
+        public string GetProfilePath (string fileName) =>
+            Path.Combine (_filesPath, fileName);
 
         private static Person MapToMainModel (PersonViewModel personViewModel) =>
             new Person {

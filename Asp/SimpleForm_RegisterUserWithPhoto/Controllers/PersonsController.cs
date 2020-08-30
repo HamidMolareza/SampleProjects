@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FunctionalUtility.Extensions;
 using Microsoft.AspNetCore.Mvc;
@@ -18,8 +20,11 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
         }
 
         // GET: Persons
-        public async Task<IActionResult> Index () =>
-            View (await _personsService.GetAllAsync ());
+        public async Task<IActionResult> Index () {
+            var persons = await _personsService.GetAllAsync ();
+            var personsViewModel = MapToViewModel (persons);
+            return View (personsViewModel);
+        }
 
         // GET: Persons/Details/5
         public async Task<IActionResult> Details (string? id) {
@@ -64,10 +69,6 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
                 return NotFound ();
 
             var personViewModel = MapToViewModel (person);
-
-            //TODO: ****
-            //personViewModel.ProfileUrl = Url.Content(_personsService.GetProfilePath(personViewModel.Id));
-            personViewModel.ProfileUrl = "https://localhost:44333/img.jpg";
 
             personViewModel.ImageValidTypes = _profileImageSetting.ValidTypesStr;
             return View (personViewModel);
@@ -120,7 +121,7 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
             return RedirectToAction (nameof (Index));
         }
 
-        private static PersonViewModel MapToViewModel (Person person) =>
+        private PersonViewModel MapToViewModel (Person person) =>
             new PersonViewModel {
                 Age = person.Age,
                 Agreement = person.Agreement,
@@ -129,7 +130,13 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
                 Id = person.Id,
                 Name = person.Name,
                 Phone = person.Phone,
-                RegisterDateTime = person.RegisterDateTime
+                RegisterDateTime = person.RegisterDateTime,
+                ProfileUrl = person.ProfileImageName != null ?
+                Url.ActionLink (nameof (DownloadController.Get),
+                DownloadController.ControllerName, new { id = person.ProfileImageName }) : Url.Content ("~/NoImage.jpg")
             };
+
+        private List<PersonViewModel> MapToViewModel (IEnumerable<Person> persons) =>
+            persons.Select (MapToViewModel).ToList ();
     }
 }
