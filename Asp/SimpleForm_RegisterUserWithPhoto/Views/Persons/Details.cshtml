@@ -1,4 +1,4 @@
-@model SimpleForm_RegisterUserWithPhoto.Models.Person
+@model SimpleForm_RegisterUserWithPhoto.ViewModels.PersonViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -8,51 +8,8 @@
 
 <div>
     <h4>Person</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Family)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Family)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Phone)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Phone)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Age)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Age)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Agreement)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Agreement)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RegisterDateTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RegisterDateTime)
-        </dd>
-    </dl>
+    <hr/>
+   <partial name="_PersonDisplayData"/>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |

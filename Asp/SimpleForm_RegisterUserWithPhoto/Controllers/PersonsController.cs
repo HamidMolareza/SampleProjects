@@ -35,7 +35,7 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
             if (person == null)
                 return NotFound ();
 
-            return View (person);
+            return View (MapToViewModel (person));
         }
 
         // GET: Persons/Create
@@ -106,7 +106,7 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
             if (person == null)
                 return NotFound ();
 
-            return View (person);
+            return View (MapToViewModel (person));
         }
 
         // POST: Persons/Delete/5
