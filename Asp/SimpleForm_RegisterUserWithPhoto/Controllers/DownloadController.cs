@@ -23,18 +23,18 @@ namespace SimpleForm_RegisterUserWithPhoto.Controllers {
                     .FailWhen (isFileExist => !isFileExist,
                         new NotFoundError (message: "The file is not exist."))
                     .OnSuccess (() => System.IO.File.OpenRead (filePath))
-                    .OnSuccess (fileStream => (fileStream, filePath))
+                    .OnSuccess (fs => (fs, filePath))
                 );
 
             if (!fileStreamResult.IsSuccess)
                 return fileStreamResult.ReturnMethodResult ();
-            var result = fileStreamResult.Value;
+            var (fileStream, fileName) = fileStreamResult.Value;
 
-            var contentType = GetContentType (result.filePath);
+            var contentType = GetContentType (fileName);
             if (string.IsNullOrEmpty (contentType))
                 return NotFound ();
 
-            return File (result.fileStream, contentType, id);
+            return File (fileStream, contentType, id);
         }
 
         private static string GetContentType (string fileName) => new FileExtensionContentTypeProvider ()

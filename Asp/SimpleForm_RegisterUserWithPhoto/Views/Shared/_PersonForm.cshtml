@@ -2,7 +2,7 @@
 
 @{
     var imageSrc = Model?.ProfileUrl ?? Url.Content("~/NoImage.jpg");
-    var imageValidTypes = Model?.ImageValidTypes ?? ".png,.jpg,.jpeg,.gif,.bmp";
+    var imageValidTypes = ViewData["ImageValidTypes"] ?? ".png,.jpg,.jpeg,.gif,.bmp";
 }
 
 <div class="row">
