@@ -3,10 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using FunctionalUtility.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using ModelsValidation.Extensions;
 using SimpleForm_RegisterUserWithPhoto.Interfaces;
 using SimpleForm_RegisterUserWithPhoto.Models;
 using SimpleForm_RegisterUserWithPhoto.Models.Configs;
-using SimpleForm_RegisterUserWithPhoto.Utility;
 using SimpleForm_RegisterUserWithPhoto.ViewModels;
 
 namespace SimpleForm_RegisterUserWithPhoto.Controllers {
