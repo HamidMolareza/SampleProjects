@@ -47,7 +47,7 @@
             </div>
             <label for="imgInput" class="cursor">
                 <input asp-for="ProfilePhotoFile" id="imgInput" accept="@imageValidTypes" class="noDisplay"/>
-                <img src="@imageSrc" alt="your image" id="profileImg"/>
+                <img src="@imageSrc" alt="your image" id="profileImg" class="rounded-circle img-fluid"/>
                 <div class="gray-dark text-white position-absolute" id="div-edit-profile-image">
                     <span class="material-icons align-text-bottom" id="pencil">edit</span>
                     Edit
