@@ -1,0 +1,1 @@
+npm i -D -E clean-webpack-plugin css-loader mini-css-extract-plugin webpack webpack-cli postcss-loader cssnano
