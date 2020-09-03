@@ -16,6 +16,7 @@ namespace SimpleForm_RegisterUserWithPhoto.Models {
         [Required]
         [PhoneNumber]
         [Phone]
+        [DataType (DataType.PhoneNumber)]
         public string Phone { get; set; } = null!;
 
         [Range (5, 120)]

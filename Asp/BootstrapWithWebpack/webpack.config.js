@@ -6,6 +6,7 @@ module.exports = {
     entry: {
         bootstrap_css: "./node_modules/bootstrap/dist/css/bootstrap.min.css",
         jquery: "./node_modules/jquery/dist/jquery.min.js",
+        jquery: "./node_modules/jquery/dist/jquery.slim.min.js",
         bootstrap_js: "./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
         jquery_validate: "./node_modules/jquery-validation/dist/jquery.validate.min.js",
         jquery_validate: "./node_modules/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js",
